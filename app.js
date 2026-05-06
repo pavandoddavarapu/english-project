@@ -122,6 +122,8 @@ function playDing() {
       osc.start(t); osc.stop(t + 0.7);
     });
   } catch (e) { }
+}
+
 async function fetchAIData() {
   const res = await fetch(`/api/daily?date=${TODAY}`);
   if (!res.ok) {
