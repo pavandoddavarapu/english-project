@@ -66,8 +66,15 @@ let selectedCategory = 'random';
 let selectedDifficulty = 'random';
 
 // ─── AUDIO (Web Audio API) ──────────────────────────────
+let audioCtx = null;
 function getAudioCtx() {
-  return new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
 }
 
 function playTick() {
