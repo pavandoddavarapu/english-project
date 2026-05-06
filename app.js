@@ -129,19 +129,22 @@ async function fetchAIData() {
   if (!res.ok) {
     throw new Error(`Backend failed with status ${res.status}`);
   }
-  return await res.json();
+  const data = await res.json();
+  console.log(`📡 Fetched fresh data from: ${data.__source__ || 'Unknown API'}`);
+  return data;
 }
 
 async function initDailyData() {
   topicAbove.textContent = '🤖 AI';
   topicMain.textContent = 'Loading today\'s fresh content…';
-  topicBelow.textContent = 'Powered by Gemini · updates every day';
+  topicBelow.textContent = 'Powered by AI · updates every day';
   spinBtn.disabled = true;
 
   try {
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
       DAILY_DATA = JSON.parse(cached);
+      console.log(`✅ Loaded from Local Cache. Source was: ${DAILY_DATA.__source__}`);
     } else {
       DAILY_DATA = await fetchAIData();
       localStorage.setItem(CACHE_KEY, JSON.stringify(DAILY_DATA));

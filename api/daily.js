@@ -1,6 +1,7 @@
 export default async function handler(req, res) {
-  // Allow CORS
+  // Allow CORS and cache the response globally on Vercel Edge for 24 hours
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=43200');
 
   const { date } = req.query;
   const today = date || new Date().toISOString().slice(0, 10);
@@ -78,7 +79,9 @@ Other sections:
       let text = json.candidates[0].content.parts[0].text;
       const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/);
       if (fence) text = fence[1];
-      return res.status(200).json(JSON.parse(text.trim()));
+      const data = JSON.parse(text.trim());
+      data.__source__ = 'Gemini (Flash Latest)';
+      return res.status(200).json(data);
     }
     console.warn(`Gemini failed (${geminiRes.status})`);
   } catch (e) {
@@ -110,7 +113,9 @@ Other sections:
 
     if (groqRes.ok) {
       const json = await groqRes.json();
-      return res.status(200).json(JSON.parse(json.choices[0].message.content));
+      const data = JSON.parse(json.choices[0].message.content);
+      data.__source__ = 'Groq (LLaMA 3.3 70B)';
+      return res.status(200).json(data);
     }
     console.warn(`Groq failed (${groqRes.status})`);
   } catch (e) {
