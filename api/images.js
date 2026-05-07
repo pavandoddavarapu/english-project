@@ -13,36 +13,50 @@
 // ─── CONFIG ────────────────────────────────────────────────────────────────
 const UNSPLASH_KEY = process.env.UNSPLASH_ACCESS_KEY;
 
-// Safe, visually appealing categories for speech-practice images
-const CATEGORIES = [
-  // Simple Objects (hero shots on plain backgrounds)
-  'household object plain background',
-  'classroom item isolated',
-  'ceramic teapot still life',
-  'leather backpack clean background',
-  'everyday object minimalism',
+// ─── DYNAMIC QUERY GENERATOR ───────────────────────────────────────────────
+// Generates thousands of unique search combinations based on target themes
 
-  // Busy Scenes (action-packed environments)
-  'crowded park people',
-  'messy kitchen cooking',
-  'busy airport terminal',
-  'action packed street scene',
-  
-  // Scenic Landscapes (mood and sensory descriptions)
-  'foggy forest morning',
-  'tropical beach sunset',
-  'evocative nature landscape',
-  'moody scenic mountains',
+const VOCAB = {
+  objects: ['teapot', 'backpack', 'camera', 'sneaker', 'coffee mug', 'book', 'plant', 'clock', 'chair', 'lamp', 'bicycle', 'guitar', 'headphones', 'sunglasses', 'watch', 'typewriter', 'vase'],
+  objMods: ['ceramic', 'leather', 'vintage', 'modern', 'colorful', 'minimalist', 'wooden', 'glass', 'metallic', 'retro', 'elegant'],
+  objCtx:  ['on plain background', 'isolated', 'still life', 'clean background', 'minimalism', 'hero shot', 'studio lighting'],
 
-  // Contextual Memes (slice of life, relatable)
-  'funny slice of life',
-  'relatable human reaction',
-  'awkward situation funny',
+  scenes:  ['park', 'kitchen', 'airport terminal', 'cafe', 'street market', 'train station', 'office', 'classroom', 'subway', 'shopping mall', 'festival', 'gym'],
+  scnMods: ['crowded', 'messy', 'busy', 'action packed', 'chaotic', 'bustling', 'lively', 'energetic'],
+
+  lands:   ['forest', 'beach', 'mountains', 'desert', 'canyon', 'lake', 'waterfall', 'city skyline', 'tundra', 'jungle'],
+  lndMods: ['foggy', 'tropical', 'scenic', 'moody', 'evocative', 'sunset', 'sunrise', 'mystical', 'majestic', 'breathtaking'],
+
+  memes:   ['funny slice of life', 'relatable human reaction', 'awkward situation funny', 'people laughing together', 'surprised face', 'bored at work', 'struggling with technology', 'pet doing something funny'],
+
+  styles:  ['photorealistic', 'clean modern digital illustration', 'cinematic lighting', 'high resolution']
+};
+
+function pick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function generateDynamicQuery() {
+  const type = Math.floor(Math.random() * 4);
+  let query = '';
   
-  // Styles mix
-  'clean modern digital illustration',
-  'photorealistic everyday scene'
-];
+  if (type === 0) {
+    query = `${pick(VOCAB.objMods)} ${pick(VOCAB.objects)} ${pick(VOCAB.objCtx)}`;
+  } else if (type === 1) {
+    query = `${pick(VOCAB.scnMods)} ${pick(VOCAB.scenes)} people`;
+  } else if (type === 2) {
+    query = `${pick(VOCAB.lndMods)} ${pick(VOCAB.lands)} landscape`;
+  } else {
+    query = pick(VOCAB.memes);
+  }
+  
+  // 30% chance to append a specific style constraint
+  if (Math.random() < 0.3) {
+    query += ` ${pick(VOCAB.styles)}`;
+  }
+  
+  return query;
+}
 
 const BATCH_SIZE        = 50;   // how many images to fetch per refill
 const LOW_CACHE_THRESH  = 10;   // trigger background refill below this
@@ -106,12 +120,10 @@ async function refillCache() {
 
   console.log('🖼️  Refilling image cache…');
 
-  // Shuffle categories so we always get a fresh mix
-  const shuffled = [...CATEGORIES].sort(() => Math.random() - 0.5);
-
+  // Generate unique dynamic queries
   const needed   = BATCH_SIZE - imageCache.length;
   const queries  = Math.ceil(needed / PER_QUERY);
-  const selected = shuffled.slice(0, queries);
+  const selected = Array.from({ length: queries }, () => generateDynamicQuery());
 
   const results = await Promise.all(selected.map(q => fetchUnsplashQuery(q)));
   const newImgs = results.flat();
