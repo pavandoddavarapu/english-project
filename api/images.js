@@ -35,13 +35,15 @@ function pick(arr) {
 }
 
 function generateDynamicQuery() {
-  const type = Math.floor(Math.random() * 2); // Now only 2 categories (Objects & Scenes)
+  const type = Math.floor(Math.random() * 3); // Now 3 categories: Objects, Scenes, Situations
   let query = '';
   
   if (type === 0) {
     query = `${pick(VOCAB.objMods)} ${pick(VOCAB.objects)} ${pick(VOCAB.objCtx)}`;
+  } else if (type === 1) {
+    query = `${pick(VOCAB.scnMods)} ${pick(VOCAB.scenes)}`;
   } else {
-    query = `${pick(VOCAB.scnMods)} ${pick(VOCAB.scenes)} people`;
+    query = pick(VOCAB.situations);
   }
   
   // 30% chance to append a specific style constraint
