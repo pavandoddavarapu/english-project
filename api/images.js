@@ -25,7 +25,8 @@ const VOCAB = {
   scnMods: ['crowded', 'messy', 'busy', 'action packed', 'chaotic', 'bustling', 'lively', 'energetic'],
 
 
-  situations: ['people interacting full scene', 'group of friends having fun wide shot', 'family dinner table', 'colleagues working together office', 'person struggling with technology at desk', 'funny pet behavior in house', 'social situation full scene', 'people playing sports outdoors'],
+
+  memes:   ['funny slice of life', 'relatable human reaction', 'awkward situation funny', 'people laughing together', 'surprised face', 'bored at work', 'struggling with technology', 'pet doing something funny'],
 
   styles:  ['photorealistic', 'real photography', 'high quality photo', 'documentary photography']
 };
@@ -43,7 +44,7 @@ function generateDynamicQuery() {
   } else if (type === 1) {
     query = `${pick(VOCAB.scnMods)} ${pick(VOCAB.scenes)} people`;
   } else {
-    query = pick(VOCAB.situations);
+    query = pick(VOCAB.memes);
   }
   
   // 30% chance to append a specific style constraint
