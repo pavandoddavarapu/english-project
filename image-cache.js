@@ -44,12 +44,6 @@ const PictureTalk = (() => {
     { url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'crowded street scene', category: 'Busy Scene' },
     { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'messy desk and students', category: 'Busy Scene' },
     { url: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'busy airport terminal', category: 'Busy Scene' },
-    
-    // Scenic Landscapes
-    { url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'foggy forest morning', category: 'Landscape' },
-    { url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'tropical beach sunset', category: 'Landscape' },
-    { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'moody scenic mountains', category: 'Landscape' },
-    
     // Contextual / Slice of Life
     { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'friends laughing together', category: 'Slice of Life' },
     { url: 'https://images.unsplash.com/photo-1542596594-649edbc13630?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'awkward funny human reaction', category: 'Contextual Meme' },

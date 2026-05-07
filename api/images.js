@@ -24,8 +24,7 @@ const VOCAB = {
   scenes:  ['park', 'kitchen', 'airport terminal', 'cafe', 'street market', 'train station', 'office', 'classroom', 'subway', 'shopping mall', 'festival', 'gym'],
   scnMods: ['crowded', 'messy', 'busy', 'action packed', 'chaotic', 'bustling', 'lively', 'energetic'],
 
-  lands:   ['forest', 'beach', 'mountains', 'desert', 'canyon', 'lake', 'waterfall', 'city skyline', 'tundra', 'jungle'],
-  lndMods: ['foggy', 'tropical', 'scenic', 'moody', 'evocative', 'sunset', 'sunrise', 'mystical', 'majestic', 'breathtaking'],
+
 
   memes:   ['funny slice of life', 'relatable human reaction', 'awkward situation funny', 'people laughing together', 'surprised face', 'bored at work', 'struggling with technology', 'pet doing something funny'],
 
@@ -37,15 +36,13 @@ function pick(arr) {
 }
 
 function generateDynamicQuery() {
-  const type = Math.floor(Math.random() * 4);
+  const type = Math.floor(Math.random() * 3); // Now 3 categories
   let query = '';
   
   if (type === 0) {
     query = `${pick(VOCAB.objMods)} ${pick(VOCAB.objects)} ${pick(VOCAB.objCtx)}`;
   } else if (type === 1) {
     query = `${pick(VOCAB.scnMods)} ${pick(VOCAB.scenes)} people`;
-  } else if (type === 2) {
-    query = `${pick(VOCAB.lndMods)} ${pick(VOCAB.lands)} landscape`;
   } else {
     query = pick(VOCAB.memes);
   }
