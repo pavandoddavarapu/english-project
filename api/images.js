@@ -26,7 +26,6 @@ const VOCAB = {
 
 
 
-  memes:   ['funny slice of life', 'relatable human reaction', 'awkward situation funny', 'people laughing together', 'surprised face', 'bored at work', 'struggling with technology', 'pet doing something funny'],
 
   styles:  ['photorealistic', 'real photography', 'high quality photo', 'documentary photography']
 };
@@ -36,15 +35,13 @@ function pick(arr) {
 }
 
 function generateDynamicQuery() {
-  const type = Math.floor(Math.random() * 3); // Now 3 categories
+  const type = Math.floor(Math.random() * 2); // Now only 2 categories (Objects & Scenes)
   let query = '';
   
   if (type === 0) {
     query = `${pick(VOCAB.objMods)} ${pick(VOCAB.objects)} ${pick(VOCAB.objCtx)}`;
-  } else if (type === 1) {
-    query = `${pick(VOCAB.scnMods)} ${pick(VOCAB.scenes)} people`;
   } else {
-    query = pick(VOCAB.memes);
+    query = `${pick(VOCAB.scnMods)} ${pick(VOCAB.scenes)} people`;
   }
   
   // 30% chance to append a specific style constraint

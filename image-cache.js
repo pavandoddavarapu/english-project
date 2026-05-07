@@ -44,10 +44,7 @@ const PictureTalk = (() => {
     { url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'crowded street scene', category: 'Busy Scene' },
     { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'messy desk and students', category: 'Busy Scene' },
     { url: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'busy airport terminal', category: 'Busy Scene' },
-    // Contextual / Slice of Life
-    { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'friends laughing together', category: 'Slice of Life' },
-    { url: 'https://images.unsplash.com/photo-1542596594-649edbc13630?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'awkward funny human reaction', category: 'Contextual Meme' },
-    { url: 'https://images.unsplash.com/photo-1521109489436-0adbc3171eb8?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'funny dog reaction', category: 'Contextual Meme' }
+
   ];
   let fallbackIdx = Math.floor(Math.random() * FALLBACKS.length);
 
