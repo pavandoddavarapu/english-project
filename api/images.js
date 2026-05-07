@@ -28,7 +28,7 @@ const VOCAB = {
 
   memes:   ['funny slice of life', 'relatable human reaction', 'awkward situation funny', 'people laughing together', 'surprised face', 'bored at work', 'struggling with technology', 'pet doing something funny'],
 
-  styles:  ['photorealistic', 'clean modern digital illustration', 'cinematic lighting', 'high resolution']
+  styles:  ['photorealistic', 'real photography', 'high quality photo', 'documentary photography']
 };
 
 function pick(arr) {
