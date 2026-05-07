@@ -54,9 +54,9 @@ function generateDynamicQuery() {
   return query;
 }
 
-const BATCH_SIZE        = 50;   // how many images to fetch per refill
-const LOW_CACHE_THRESH  = 10;   // trigger background refill below this
-const PER_QUERY         = 5;    // images fetched per Unsplash query (max 30)
+const BATCH_SIZE        = 75;   // total images to hold in cache
+const LOW_CACHE_THRESH  = 15;   // trigger background refill below this
+const PER_QUERY         = 5;    // fetch 5 images per dynamic query
 const IMAGE_WIDTH       = 1200; // Unsplash CDN resize param
 const IMAGE_HEIGHT      = 800;
 
