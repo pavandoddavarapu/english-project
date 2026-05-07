@@ -35,21 +35,25 @@ const PictureTalk = (() => {
 
   // ─── FALLBACK IMAGES (no API key / quota exhausted) ─────────────
   const FALLBACKS = [
-    { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'mountain landscape', category: 'Nature' },
-    { url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'cosy cafe with coffee', category: 'Cafe' },
-    { url: 'https://images.unsplash.com/photo-1543353071-087092ec393a?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'delicious meal plated beautifully', category: 'Food' },
-    { url: 'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'golden retriever puppy', category: 'Pets' },
-    { url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'technology circuit board', category: 'Technology' },
-    { url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'shelves full of library books', category: 'Books' },
-    { url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'gym workout equipment', category: 'Fitness' },
-    { url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'aerial city skyline at dusk', category: 'City' },
-    { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'friends laughing at a park', category: 'Friendship' },
-    { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'student studying at a desk', category: 'Education' },
-    { url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'live music concert with crowd', category: 'Music' },
-    { url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'travel adventure landscape', category: 'Travel' },
-    { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'busy shopping street', category: 'Shopping' },
-    { url: 'https://images.unsplash.com/photo-1487611459768-bd414656ea10?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'modern office workspace', category: 'Office' },
-    { url: 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'lifestyle travel photography', category: 'Lifestyle' },
+    // Simple Objects
+    { url: 'https://images.unsplash.com/photo-1577005477439-ebbc64f2165c?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'ceramic teapot on plain background', category: 'Simple Object' },
+    { url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'leather backpack', category: 'Simple Object' },
+    { url: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'ice cream cone isolated', category: 'Simple Object' },
+    
+    // Busy Scenes
+    { url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'crowded street scene', category: 'Busy Scene' },
+    { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'messy desk and students', category: 'Busy Scene' },
+    { url: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'busy airport terminal', category: 'Busy Scene' },
+    
+    // Scenic Landscapes
+    { url: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'foggy forest morning', category: 'Landscape' },
+    { url: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'tropical beach sunset', category: 'Landscape' },
+    { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'moody scenic mountains', category: 'Landscape' },
+    
+    // Contextual / Slice of Life
+    { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'friends laughing together', category: 'Slice of Life' },
+    { url: 'https://images.unsplash.com/photo-1542596594-649edbc13630?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'awkward funny human reaction', category: 'Contextual Meme' },
+    { url: 'https://images.unsplash.com/photo-1521109489436-0adbc3171eb8?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'funny dog reaction', category: 'Contextual Meme' }
   ];
   let fallbackIdx = Math.floor(Math.random() * FALLBACKS.length);
 

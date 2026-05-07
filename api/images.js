@@ -15,21 +15,33 @@ const UNSPLASH_KEY = process.env.UNSPLASH_ACCESS_KEY;
 
 // Safe, visually appealing categories for speech-practice images
 const CATEGORIES = [
-  'travel',
-  'cafe',
-  'food',
-  'pets',
-  'technology',
-  'education',
-  'office',
-  'nature',
-  'fitness',
-  'books',
-  'shopping',
-  'music',
-  'lifestyle',
-  'city',
-  'friendship',
+  // Simple Objects (hero shots on plain backgrounds)
+  'household object plain background',
+  'classroom item isolated',
+  'ceramic teapot still life',
+  'leather backpack clean background',
+  'everyday object minimalism',
+
+  // Busy Scenes (action-packed environments)
+  'crowded park people',
+  'messy kitchen cooking',
+  'busy airport terminal',
+  'action packed street scene',
+  
+  // Scenic Landscapes (mood and sensory descriptions)
+  'foggy forest morning',
+  'tropical beach sunset',
+  'evocative nature landscape',
+  'moody scenic mountains',
+
+  // Contextual Memes (slice of life, relatable)
+  'funny slice of life',
+  'relatable human reaction',
+  'awkward situation funny',
+  
+  // Styles mix
+  'clean modern digital illustration',
+  'photorealistic everyday scene'
 ];
 
 const BATCH_SIZE        = 50;   // how many images to fetch per refill
