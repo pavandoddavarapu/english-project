@@ -8,7 +8,7 @@
 
   <!-- SEO & Social Meta Tags -->
   <meta name="description"
-    content="Practice your English speaking skills with daily AI-generated topics, interview prep, and vocabulary learning. A fun, interactive speech practice tool." />
+    content="Practice your English speaking skills with daily AI-generated topics, interview prep, vocabulary learning, and picture description. A fun, interactive speech practice tool." />
   <meta property="og:title" content="Speak Up! – English Speech Practice" />
   <meta property="og:description"
     content="Level up your English fluency with daily AI-generated speaking challenges!" />
@@ -37,6 +37,7 @@
       <button class="nav-tab active" data-tab="random" id="tab-random">🎲 Random Topics</button>
       <button class="nav-tab" data-tab="interview" id="tab-interview">💼 Interview Prep</button>
       <button class="nav-tab" data-tab="vocab" id="tab-vocab">📖 Learn Vocab</button>
+      <button class="nav-tab nav-tab-picture" data-tab="picture" id="tab-picture">🖼️ Picture Talk</button>
     </div>
 
     <!-- THEME SWITCHER -->
@@ -147,14 +148,41 @@
         </div>
       </div>
 
+      <!-- PICTURE TALK PANEL -->
+      <div class="panel-section hidden" id="panel-picture">
+        <div class="big-title handwritten picture-title">
+          <span class="title-line">Picture</span>
+          <span class="title-line accent">Talk</span>
+          <div class="picture-decor">📸 🗣️ ✨</div>
+        </div>
+        <ol class="instructions">
+          <li>🌀 <span class="underline-squiggle">Spin</span> for a new image</li>
+          <li>👀 Look &amp; <span class="underline-squiggle">observe</span></li>
+          <li>🎙️ Describe what you see</li>
+        </ol>
+        <a href="#" class="btn-primary" id="speech-analysis-btn4">
+          GET SPEECH ANALYSIS
+          <span class="badge-new">NEW</span>
+        </a>
+        <!-- Speaking tips card -->
+        <div class="picture-tips-card">
+          <div class="tips-heading">💡 What to say</div>
+          <ul class="tips-list">
+            <li>What do you <strong>see</strong> in the picture?</li>
+            <li>What's the <strong>mood</strong> or feeling?</li>
+            <li>What might be <strong>happening</strong>?</li>
+            <li>What does it <strong>remind</strong> you of?</li>
+          </ul>
+        </div>
+      </div>
+
     </aside>
 
     <!-- RIGHT PANEL -->
     <section class="right-panel">
 
-      <!-- FILTERS -->
+      <!-- FILTERS — shown per tab -->
       <div class="filters-row" id="filters-random">
-
         <!-- Category Dropdown -->
         <div class="filter-dropdown-container" id="category-dropdown-container">
           <button class="filter-pill dropdown-toggle" id="category-toggle">
@@ -197,7 +225,6 @@
             <button class="filter-option" data-value="hard">🔴 Hard <span class="check hidden">✓</span></button>
           </div>
         </div>
-
       </div>
 
       <div class="filters-row hidden" id="filters-interview">
@@ -214,13 +241,43 @@
         </div>
       </div>
 
-      <!-- TOPIC SPINNER AREA -->
-      <div class="topic-area">
+      <!-- PICTURE tab filter row — category badge lives inline here -->
+      <div class="filters-row hidden" id="filters-picture">
+        <div class="filter-pill picture-cat-pill" id="picture-cat-pill">
+          <span id="picture-cat-label">📍 Any Category</span>
+        </div>
+      </div>
+
+      <!-- TOPIC SPINNER AREA (random / interview / vocab) -->
+      <div class="topic-area" id="topic-area-words">
         <div class="topic-above" id="topic-above">Gratitude</div>
         <div class="topic-main" id="topic-main">
           Defend that contradiction is a sign of wisdom, not weakness.
         </div>
         <div class="topic-below" id="topic-below">The snooze button does more harm than good.</div>
+      </div>
+
+      <!-- PICTURE DISPLAY AREA (picture tab only) -->
+      <div class="picture-display-area hidden" id="picture-display-area">
+        <!-- Skeleton shimmer (shown while loading) -->
+        <div class="picture-skeleton" id="picture-skeleton">
+          <div class="skeleton-shimmer"></div>
+          <div class="skeleton-icon">📷</div>
+          <div class="skeleton-text">Loading image…</div>
+        </div>
+
+        <!-- Crossfade layers -->
+        <div class="picture-img-layer picture-layer-a" id="picture-layer-a"></div>
+        <div class="picture-img-layer picture-layer-b" id="picture-layer-b"></div>
+
+        <!-- Gradient overlay at the bottom for readability -->
+        <div class="picture-gradient-overlay"></div>
+
+        <!-- Prompt shown on top of the image -->
+        <div class="picture-speak-prompt" id="picture-speak-prompt">
+          <span class="prompt-icon">🗣️</span>
+          <span class="prompt-text">Describe what you see…</span>
+        </div>
       </div>
 
       <!-- DIAL -->
@@ -264,8 +321,14 @@
       <div class="nav-brand">Baby Steps to the Mic 🎤</div>
     </div>
 
-    <!-- Topic label -->
-    <div class="timer-topic-label">TOPIC:</div>
+    <!-- Topic / Image label -->
+    <div class="timer-topic-label" id="timer-topic-label">TOPIC:</div>
+
+    <!-- In picture mode, show a small thumbnail in the timer -->
+    <div class="timer-picture-thumb hidden" id="timer-picture-thumb">
+      <img id="timer-thumb-img" src="" alt="speak about this" />
+    </div>
+
     <div class="timer-topic-text" id="timer-topic-text">Pie in the sky</div>
 
     <!-- Circular timer -->
@@ -331,6 +394,8 @@
     </div>
   </div>
 
+  <!-- Smart Cached Image System -->
+  <script src="image-cache.js"></script>
   <script src="app.js"></script>
   <!-- PWA Service Worker Registration -->
   <script>

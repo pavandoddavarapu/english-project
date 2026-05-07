@@ -209,8 +209,25 @@ function getVocabPool() {
 // ─── DOM REFS ────────────────────────────────────
 
 const tabBtns = document.querySelectorAll(".nav-tab");
-const panels = { random: document.getElementById("panel-random"), interview: document.getElementById("panel-interview"), vocab: document.getElementById("panel-vocab") };
-const filterSets = { random: document.getElementById("filters-random"), interview: document.getElementById("filters-interview"), vocab: document.getElementById("filters-vocab") };
+const panels = {
+  random   : document.getElementById("panel-random"),
+  interview: document.getElementById("panel-interview"),
+  vocab    : document.getElementById("panel-vocab"),
+  picture  : document.getElementById("panel-picture"),
+};
+const filterSets = {
+  random   : document.getElementById("filters-random"),
+  interview: document.getElementById("filters-interview"),
+  vocab    : document.getElementById("filters-vocab"),
+  picture  : document.getElementById("filters-picture"),
+};
+
+// Picture-tab specific elements
+const pictureDisplayArea = document.getElementById("picture-display-area");
+const topicAreaWords     = document.getElementById("topic-area-words");
+const timerPictureThumb  = document.getElementById("timer-picture-thumb");
+const timerThumbImg      = document.getElementById("timer-thumb-img");
+const timerTopicLabel    = document.getElementById("timer-topic-label");
 const topicAbove = document.getElementById("topic-above");
 const topicMain = document.getElementById("topic-main");
 const topicBelow = document.getElementById("topic-below");
@@ -251,14 +268,21 @@ function switchTab(tab) {
   // Update nav
   tabBtns.forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
 
-  // Show/hide panels
+  // Show/hide left panels
   Object.entries(panels).forEach(([key, el]) => el.classList.toggle("hidden", key !== tab));
+  // Show/hide filter rows
   Object.entries(filterSets).forEach(([key, el]) => el.classList.toggle("hidden", key !== tab));
 
-  // Update topic display based on tab
-  if (tab === "random") { const p = getRandomPool(); showTopic(p[Math.floor(Math.random() * p.length)]); }
+  // Show picture display OR word topic area
+  const isPicture = tab === 'picture';
+  if (pictureDisplayArea) pictureDisplayArea.classList.toggle('hidden', !isPicture);
+  if (topicAreaWords)     topicAreaWords.classList.toggle('hidden', isPicture);
+
+  // Update content for the new tab
+  if (tab === "random")    { const p = getRandomPool();    showTopic(p[Math.floor(Math.random() * p.length)]); }
   if (tab === "interview") { const p = getInterviewPool(); showTopic(p[Math.floor(Math.random() * p.length)]); }
-  if (tab === "vocab") { const p = getVocabPool(); showVocabTopic(p[Math.floor(Math.random() * p.length)]); }
+  if (tab === "vocab")     { const p = getVocabPool();     showVocabTopic(p[Math.floor(Math.random() * p.length)]); }
+  if (tab === "picture")   { initPictureTalk(); }
 }
 
 // ─── DROPDOWNS (FILTERS) ─────────────────────────
@@ -381,6 +405,19 @@ function launchSparkles(container) {
 // ─── SPIN ────────────────────────────────────────
 
 spinBtn.addEventListener("click", () => {
+  spinBtn.classList.add("is-spinning");
+  playWhoosh();
+
+  // ── PICTURE TAB: just fetch a new image, no text spinning ──
+  if (currentTab === 'picture') {
+    if (window.PictureTalk) PictureTalk.next();
+    launchConfetti(18);
+    playDing();
+    setTimeout(() => spinBtn.classList.remove("is-spinning"), 600);
+    return;
+  }
+
+  // ── WORD TABS: the normal slot-machine spin ──
   topicMain.classList.remove("spinning");
   void topicMain.offsetWidth;
   topicMain.classList.add("spinning");
@@ -389,9 +426,7 @@ spinBtn.addEventListener("click", () => {
   topicArea.classList.add("spinning-active");
   topicAbove.classList.add("flipping");
   topicBelow.classList.add("flipping");
-  spinBtn.classList.add("is-spinning");
 
-  playWhoosh();
   launchSparkles(topicArea);
 
   let count = 0;
@@ -417,21 +452,14 @@ spinBtn.addEventListener("click", () => {
 
     if (count >= maxFlips) {
       clearInterval(interval);
-
-      // Remove all spinning classes
       topicMain.classList.remove("spinning");
       topicArea.classList.remove("spinning-active");
       topicAbove.classList.remove("flipping");
       topicBelow.classList.remove("flipping");
       spinBtn.classList.remove("is-spinning");
-
-      // Elastic bounce on landing
       topicMain.classList.add("landed");
       setTimeout(() => topicMain.classList.remove("landed"), 550);
-
-      // ─ Sound: victory ding ─
       playDing();
-
       launchConfetti(30);
     }
   }, 80);
@@ -457,8 +485,18 @@ timerBtn.addEventListener("click", () => {
   circleSeconds = circleMaxSeconds;
   circleRunning = false;
 
-  // Show topic in timer screen
-  timerTopicText.textContent = topicMain.textContent.trim();
+  if (currentTab === 'picture') {
+    // Picture mode: show thumbnail + prompt instead of text
+    const img = window.PictureTalk ? PictureTalk.getCurrent() : null;
+    if (timerTopicLabel)  timerTopicLabel.textContent = 'DESCRIBE:';
+    if (timerPictureThumb) timerPictureThumb.classList.toggle('hidden', !img);
+    if (timerThumbImg && img) timerThumbImg.src = img.url;
+    timerTopicText.textContent = 'Describe what you see in the image.';
+  } else {
+    if (timerTopicLabel)  timerTopicLabel.textContent = 'TOPIC:';
+    if (timerPictureThumb) timerPictureThumb.classList.add('hidden');
+    timerTopicText.textContent = topicMain.textContent.trim();
+  }
 
   updateCircleDisplay();
   setRingProgress(1);
@@ -785,6 +823,19 @@ function animateConfetti() {
 // ─── INIT ────────────────────────────────────────
 
 initDailyData();
+
+// ─── PICTURE TALK ────────────────────────────────────────────────
+// Initialised lazily the first time user clicks the Picture Talk tab.
+// PictureTalk.init() is idempotent — safe to call multiple times.
+function initPictureTalk() {
+  if (window.PictureTalk) {
+    PictureTalk.init().catch(console.error);
+  }
+}
+
+// Wire up the speech-analysis button in picture tab
+const speechBtn4 = document.getElementById('speech-analysis-btn4');
+if (speechBtn4) speechBtn4.addEventListener('click', e => { e.preventDefault(); openModal(); });
 
 // ─── THEME SWITCHER ──────────────────────────────
 
