@@ -34,35 +34,79 @@ If the user asks about something totally unrelated to language learning, politel
       parts: [{ text: msg.content }]
     }));
 
-    // Prepend system prompt to the first message if possible
-    if (contents.length > 0 && contents[0].role === 'user') {
-       contents[0].parts[0].text = `${SYSTEM_PROMPT}\n\nUser Question: ${contents[0].parts[0].text}`;
-    }
+    // Format messages for Groq Fallback
+    const groqMessages = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...messages.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'assistant',
+        content: msg.content
+      }))
+    ];
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: contents,
-          generationConfig: {
-            temperature: 0.5,
-          }
-        })
+    // Try Gemini First
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            systemInstruction: {
+              parts: [{ text: SYSTEM_PROMPT }]
+            },
+            contents: contents,
+            generationConfig: {
+              temperature: 0.5,
+            }
+          })
+        }
+      );
+
+      if (response.ok) {
+        const json = await response.json();
+        let replyText = json.candidates[0].content.parts[0].text;
+        return res.status(200).json({ reply: replyText });
+      } else {
+        const errorData = await response.text();
+        console.error("Gemini Chat API Error:", errorData);
       }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("Gemini Chat API Error:", errorData);
-      return res.status(response.status).json({ error: "Chat failed", details: errorData });
+    } catch (e) {
+      console.error("Gemini Chat Fetch Error:", e);
     }
 
-    const json = await response.json();
-    let replyText = json.candidates[0].content.parts[0].text;
-    
-    return res.status(200).json({ reply: replyText });
+    // Fallback to Groq
+    const GROQ_KEY = process.env.GROQ_API_KEY;
+    if (GROQ_KEY) {
+      try {
+        const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${GROQ_KEY}`
+          },
+          body: JSON.stringify({
+            model: 'llama-3.3-70b-versatile',
+            messages: groqMessages,
+            temperature: 0.5,
+            max_tokens: 1024
+          })
+        });
+
+        if (groqRes.ok) {
+          const json = await groqRes.json();
+          const replyText = json.choices[0].message.content;
+          return res.status(200).json({ reply: replyText });
+        } else {
+          console.error("Groq Chat API Error:", await groqRes.text());
+        }
+      } catch (e) {
+        console.error("Groq Chat Fetch Error:", e);
+      }
+    }
+
+    // Both failed
+    return res.status(500).json({ error: "All AI providers failed to respond." });
+
   } catch (err) {
     console.error("Chat Error:", err);
     return res.status(500).json({ error: "Internal server error during chat" });
