@@ -168,17 +168,24 @@ const FALLBACK_IMAGES = [
   { url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'leather backpack', category: 'Simple Object', color: '#8B4513' },
   { url: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'ice cream cone isolated', category: 'Simple Object', color: '#f39c12' },
   { url: 'https://images.unsplash.com/photo-1512152272829-e3139592d56f?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'fast food burger', category: 'Food', color: '#e07b39' },
+  { url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'white smart watch', category: 'Simple Object', color: '#e0e0e0' },
+  { url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'headphones on desk', category: 'Simple Object', color: '#2c3e50' },
+  { url: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'coffee mug', category: 'Simple Object', color: '#d35400' },
   
   // Busy Scenes
   { url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'crowded street scene', category: 'Busy Scene', color: '#34495e' },
   { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'messy desk and students', category: 'Busy Scene', color: '#3498db' },
   { url: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'busy airport terminal', category: 'Busy Scene', color: '#1a2a4a' },
   { url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'people in a cafe', category: 'Busy Scene', color: '#8B6F47' },
+  { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'busy open plan office', category: 'Busy Scene', color: '#bdc3c7' },
   
   // Situations
   { url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'group of people working together', category: 'Situation', color: '#2c3e50' },
-  { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'friends laughing', category: 'Situation', color: '#f39c12' }
+  { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'friends laughing', category: 'Situation', color: '#f39c12' },
+  { url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'musician playing guitar', category: 'Situation', color: '#8e44ad' }
 ];
+
+let globalFallbackIdx = 0;
 
 // ─── HANDLER ────────────────────────────────────────────────────────────────
 
@@ -207,7 +214,8 @@ export default async function handler(req, res) {
 
   if (!img) {
     // Serve a fallback (no key or empty cache)
-    const fallback = FALLBACK_IMAGES[Math.floor(Math.random() * FALLBACK_IMAGES.length)];
+    const fallback = FALLBACK_IMAGES[globalFallbackIdx % FALLBACK_IMAGES.length];
+    globalFallbackIdx++;
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ ...fallback, source: 'fallback' });
   }

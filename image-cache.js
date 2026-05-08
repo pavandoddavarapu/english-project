@@ -39,12 +39,22 @@ const PictureTalk = (() => {
     { url: 'https://images.unsplash.com/photo-1577005477439-ebbc64f2165c?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'ceramic teapot on plain background', category: 'Simple Object' },
     { url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'leather backpack', category: 'Simple Object' },
     { url: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'ice cream cone isolated', category: 'Simple Object' },
+    { url: 'https://images.unsplash.com/photo-1512152272829-e3139592d56f?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'fast food burger', category: 'Food' },
+    { url: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'white smart watch', category: 'Simple Object' },
+    { url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'headphones on desk', category: 'Simple Object' },
+    { url: 'https://images.unsplash.com/photo-1544816155-12df9643f363?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'coffee mug', category: 'Simple Object' },
     
     // Busy Scenes
     { url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'crowded street scene', category: 'Busy Scene' },
     { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'messy desk and students', category: 'Busy Scene' },
     { url: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?w=1400&h=900&fit=crop&auto=format&q=80', alt: 'busy airport terminal', category: 'Busy Scene' },
-
+    { url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'people in a cafe', category: 'Busy Scene' },
+    { url: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'busy open plan office', category: 'Busy Scene' },
+    
+    // Situations
+    { url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'group of people working together', category: 'Situation' },
+    { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'friends laughing', category: 'Situation' },
+    { url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'musician playing guitar', category: 'Situation' }
   ];
   let fallbackIdx = Math.floor(Math.random() * FALLBACKS.length);
 
