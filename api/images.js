@@ -163,18 +163,21 @@ function pickImage() {
 // ─── FALLBACK IMAGES (used when Unsplash key is absent or quota exhausted) ──
 // These are stable Unsplash "source" URLs — no key required, no quota.
 const FALLBACK_IMAGES = [
-  { url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop', alt: 'mountain landscape', category: 'nature', color: '#4a90d9' },
-  { url: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&h=800&fit=crop', alt: 'cosy cafe', category: 'cafe', color: '#8B6F47' },
-  { url: 'https://images.unsplash.com/photo-1543353071-087092ec393a?w=1200&h=800&fit=crop', alt: 'delicious food', category: 'food', color: '#e07b39' },
-  { url: 'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?w=1200&h=800&fit=crop', alt: 'cute dog', category: 'pets', color: '#c9a96e' },
-  { url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200&h=800&fit=crop', alt: 'technology circuit', category: 'technology', color: '#2c3e50' },
-  { url: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&h=800&fit=crop', alt: 'library books', category: 'books', color: '#8B4513' },
-  { url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&h=800&fit=crop', alt: 'gym fitness', category: 'fitness', color: '#2c2c2c' },
-  { url: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=1200&h=800&fit=crop', alt: 'aerial city view', category: 'city', color: '#1a2a4a' },
-  { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1200&h=800&fit=crop', alt: 'friends laughing', category: 'friendship', color: '#f39c12' },
-  { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=800&fit=crop', alt: 'student studying', category: 'education', color: '#3498db' },
-  { url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&h=800&fit=crop', alt: 'music concert', category: 'music', color: '#8e44ad' },
-  { url: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=1200&h=800&fit=crop', alt: 'travel adventure', category: 'travel', color: '#16a085' },
+  // Simple Objects
+  { url: 'https://images.unsplash.com/photo-1577005477439-ebbc64f2165c?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'ceramic teapot on plain background', category: 'Simple Object', color: '#e8e8e8' },
+  { url: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'leather backpack', category: 'Simple Object', color: '#8B4513' },
+  { url: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'ice cream cone isolated', category: 'Simple Object', color: '#f39c12' },
+  { url: 'https://images.unsplash.com/photo-1512152272829-e3139592d56f?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'fast food burger', category: 'Food', color: '#e07b39' },
+  
+  // Busy Scenes
+  { url: 'https://images.unsplash.com/photo-1517783999520-f068d7431a60?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'crowded street scene', category: 'Busy Scene', color: '#34495e' },
+  { url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'messy desk and students', category: 'Busy Scene', color: '#3498db' },
+  { url: 'https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'busy airport terminal', category: 'Busy Scene', color: '#1a2a4a' },
+  { url: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'people in a cafe', category: 'Busy Scene', color: '#8B6F47' },
+  
+  // Situations
+  { url: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'group of people working together', category: 'Situation', color: '#2c3e50' },
+  { url: 'https://images.unsplash.com/photo-1530099486328-e021101a494a?w=1200&h=800&fit=crop&auto=format&q=80', alt: 'friends laughing', category: 'Situation', color: '#f39c12' }
 ];
 
 // ─── HANDLER ────────────────────────────────────────────────────────────────
