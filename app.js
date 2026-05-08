@@ -646,21 +646,69 @@ function closeModal() {
   recordBtn.classList.remove("recording");
 }
 
-// Simulate speech analysis (mock scores)
+let audioChunks = [];
+
 recordBtn.addEventListener("click", async () => {
   if (!isRecording) {
     // Start
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+      mediaRecorder.addEventListener("dataavailable", event => {
+        audioChunks.push(event.data);
+      });
+      
+      mediaRecorder.addEventListener("stop", async () => {
+        const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+        
+        // Convert Blob to Base64
+        const reader = new FileReader();
+        reader.readAsDataURL(audioBlob);
+        reader.onloadend = async () => {
+          const base64data = reader.result.split(',')[1];
+          
+          let currentTopic = topicMain ? topicMain.textContent : "General speaking practice";
+          let currentImageUrl = null;
+          
+          if (currentTab === 'picture') {
+             currentTopic = "Describe the picture provided.";
+             if (window.PictureTalk && window.PictureTalk.getCurrent()) {
+                 currentImageUrl = window.PictureTalk.getCurrent().url;
+             }
+          }
+
+          try {
+            const res = await fetch("/api/analyze", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                audioBase64: base64data,
+                mimeType: audioBlob.type,
+                topic: currentTopic,
+                imageUrl: currentImageUrl
+              })
+            });
+
+            if (!res.ok) throw new Error("Analysis failed");
+            const data = await res.json();
+            showRealAnalysis(data);
+          } catch (err) {
+            console.error(err);
+            recordStatus.textContent = "⚠️ Error analyzing speech. Try again.";
+            recordBtn.textContent = "🔴 Try Again";
+            recordBtn.disabled = false;
+          }
+        };
+      });
+
       mediaRecorder.start();
       isRecording = true;
       recordBtn.textContent = "⏹ Stop & Analyse";
       recordBtn.classList.add("recording");
       recordStatus.textContent = "🎙️ Recording… speak now!";
     } catch {
-      recordStatus.textContent = "⚠️ Microphone access denied. Showing demo scores.";
-      showDemoAnalysis();
+      recordStatus.textContent = "⚠️ Microphone access denied. Cannot record.";
     }
   } else {
     // Stop & analyse
@@ -671,23 +719,17 @@ recordBtn.addEventListener("click", async () => {
     isRecording = false;
     recordBtn.textContent = "🔄 Analysing…";
     recordBtn.disabled = true;
-    recordStatus.textContent = "Processing your speech…";
-    setTimeout(() => {
-      showDemoAnalysis();
-      recordBtn.textContent = "🔴 Try Again";
-      recordBtn.classList.remove("recording");
-      recordBtn.disabled = false;
-    }, 1800);
+    recordStatus.textContent = "Processing your speech with AI…";
   }
 });
 
-function showDemoAnalysis() {
-  const fluency = Math.floor(65 + Math.random() * 30);
-  const clarity = Math.floor(60 + Math.random() * 35);
-  const confidence = Math.floor(55 + Math.random() * 40);
+function showRealAnalysis(data) {
+  const fluency = Math.min(100, Math.max(0, data.fluency || 0));
+  const clarity = Math.min(100, Math.max(0, data.clarity || 0));
+  const confidence = Math.min(100, Math.max(0, data.confidence || 0));
 
   analysisResults.classList.remove("hidden");
-  recordStatus.textContent = "✅ Analysis complete!";
+  recordStatus.textContent = "✅ AI Analysis complete!";
 
   setTimeout(() => {
     document.getElementById("fluency-bar").style.width = fluency + "%";
@@ -696,7 +738,28 @@ function showDemoAnalysis() {
     document.getElementById("fluency-val").textContent = fluency + " / 100";
     document.getElementById("clarity-val").textContent = clarity + " / 100";
     document.getElementById("confidence-val").textContent = confidence + " / 100";
+    
+    if (document.getElementById("feedback-val")) {
+      document.getElementById("feedback-val").textContent = data.feedback || "No feedback provided.";
+    }
+    if (document.getElementById("transcription-val")) {
+      document.getElementById("transcription-val").textContent = `"${data.transcription || "No transcription available."}"`;
+    }
   }, 100);
+
+  recordBtn.textContent = "🔴 Try Again";
+  recordBtn.classList.remove("recording");
+  recordBtn.disabled = false;
+}
+
+function showDemoAnalysis() {
+  showRealAnalysis({
+    fluency: Math.floor(65 + Math.random() * 30),
+    clarity: Math.floor(60 + Math.random() * 35),
+    confidence: Math.floor(55 + Math.random() * 40),
+    feedback: "Demo feedback: This is a placeholder since we couldn't connect to the AI.",
+    transcription: "Demo transcription: Hello, this is a simulated transcription."
+  });
 }
 
 // ─── SPEAK WORD (TTS) ────────────────────────────
@@ -910,4 +973,105 @@ function initTheme() {
 
 // Run after all vars/functions are defined
 initTheme();
+
+// ─── CHATBOT LOGIC ───────────────────────────────
+
+const chatbotToggle = document.getElementById("chatbot-toggle");
+const chatbotWindow = document.getElementById("chatbot-window");
+const chatbotClose = document.getElementById("chatbot-close");
+const chatbotSend = document.getElementById("chatbot-send");
+const chatbotInput = document.getElementById("chatbot-input");
+const chatbotMessages = document.getElementById("chatbot-messages");
+const chatbotPointer = document.querySelector(".chatbot-pointer");
+
+let chatHistory = [];
+
+chatbotToggle.addEventListener("click", () => {
+  chatbotWindow.classList.toggle("hidden");
+  if (!chatbotWindow.classList.contains("hidden")) {
+    chatbotInput.focus();
+    if (chatbotPointer) chatbotPointer.style.display = "none";
+  } else {
+    if (chatbotPointer) chatbotPointer.style.display = "flex";
+  }
+});
+
+chatbotClose.addEventListener("click", () => {
+  chatbotWindow.classList.add("hidden");
+  if (chatbotPointer) chatbotPointer.style.display = "flex";
+});
+
+function appendMessage(role, text) {
+  const msgDiv = document.createElement("div");
+  msgDiv.className = `chat-message ${role}-message`;
+  // Simple markdown to HTML for bolding/newlines
+  let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                          .replace(/\n/g, '<br/>');
+  msgDiv.innerHTML = formattedText;
+  chatbotMessages.appendChild(msgDiv);
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+function showTyping() {
+  let typingEl = document.getElementById("chat-typing");
+  if (!typingEl) {
+    typingEl = document.createElement("div");
+    typingEl.id = "chat-typing";
+    typingEl.className = "chat-typing";
+    typingEl.textContent = "AI is thinking...";
+    chatbotMessages.appendChild(typingEl);
+  }
+  typingEl.style.display = "block";
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+function hideTyping() {
+  const typingEl = document.getElementById("chat-typing");
+  if (typingEl) typingEl.style.display = "none";
+}
+
+async function sendChatMessage() {
+  const text = chatbotInput.value.trim();
+  if (!text) return;
+
+  // Add user message to UI
+  appendMessage("user", text);
+  chatbotInput.value = "";
+  
+  // Add to history
+  chatHistory.push({ role: "user", content: text });
+  
+  showTyping();
+  
+  try {
+    const res = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: chatHistory })
+    });
+    
+    if (!res.ok) throw new Error("Chat request failed");
+    
+    const data = await res.json();
+    const reply = data.reply;
+    
+    hideTyping();
+    appendMessage("bot", reply);
+    chatHistory.push({ role: "assistant", content: reply });
+    
+  } catch (err) {
+    console.error(err);
+    hideTyping();
+    appendMessage("bot", "Oops! I'm having trouble connecting right now. Try again later.");
+    chatHistory.pop(); // remove failed user message from history
+  }
+}
+
+chatbotSend.addEventListener("click", sendChatMessage);
+chatbotInput.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    sendChatMessage();
+  }
+});
+
 

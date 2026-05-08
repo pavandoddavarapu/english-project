@@ -390,6 +390,42 @@
           </div>
           <div class="result-value" id="confidence-val">—</div>
         </div>
+        <div class="result-card" style="margin-top: 15px;">
+          <div class="result-label">Feedback</div>
+          <div class="result-text" id="feedback-val" style="font-size: 0.9em; margin-top: 5px; line-height: 1.4;">—</div>
+        </div>
+        <div class="result-card" style="margin-top: 10px;">
+          <div class="result-label">What you said (Transcription)</div>
+          <div class="result-text" id="transcription-val" style="font-size: 0.85em; margin-top: 5px; font-style: italic; color: var(--text-color); opacity: 0.8;">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHATBOT UI -->
+  <div class="chatbot-container" id="chatbot-container">
+    <div class="chatbot-pointer">
+      <span class="pointer-text handwritten">Got a question? Ask<br>Genie!</span>
+      <svg class="pointer-arrow" width="50" height="50" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10,20 Q60,10 80,70 M50,60 L80,70 L85,40"></path>
+      </svg>
+    </div>
+    <button class="chatbot-toggle" id="chatbot-toggle" title="Ask Genie">
+      <span class="chat-icon">🧞</span>
+    </button>
+    <div class="chatbot-window hidden" id="chatbot-window">
+      <div class="chatbot-header">
+        <div class="chatbot-title">🧞 Genie</div>
+        <button class="chatbot-close" id="chatbot-close">✕</button>
+      </div>
+      <div class="chatbot-messages" id="chatbot-messages">
+        <div class="chat-message bot-message">
+          Greetings. I am Genie, your professional English language assistant. How may I assist you with your grammar or vocabulary today?
+        </div>
+      </div>
+      <div class="chatbot-input-area">
+        <input type="text" id="chatbot-input" placeholder="Type your question..." autocomplete="off" />
+        <button id="chatbot-send">➤</button>
       </div>
     </div>
   </div>
